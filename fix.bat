@@ -20,14 +20,20 @@ if not exist "%sevenZipPath%" (
     exit /b 1
 )
 
-REM Extract export.appx using 7-Zip with -y to assume yes to all prompts
-echo Extracting "%appxFile%"...
-"%sevenZipPath%" x "%appxFile%" -o"%extractDir%" -y
-if %ERRORLEVEL% neq 0 (
-    echo Failed to extract "%appxFile%".
-    pause
-    exit /b 1
-)
+REM Extract export.appx using 7-Zip
+"%sevenZipPath%" x "%appxFile%" -o"%extractDir%"
 
 REM Delete [Content_Types].xml and AppxBlockMap.xml
-del "%extractDir%
+del "%extractDir%\[Content_Types].xml"
+del "%extractDir%\AppxBlockMap.xml"
+
+REM Use Developer Command Prompt for VS 2019 to run MakeAppx pack
+call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\VsDevCmd.bat"
+
+REM Navigate to the directory where the script is located
+cd /d "%~dp0"
+
+REM Run MakeAppx pack command
+makeappx pack /d "%extractDir%" /p my_game.appx
+
+pause
