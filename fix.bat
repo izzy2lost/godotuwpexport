@@ -21,11 +21,16 @@ if not exist "%sevenZipPath%" (
 )
 
 REM Extract export.appx using 7-Zip
+echo Extracting "%appxFile%"...
 "%sevenZipPath%" x "%appxFile%" -o"%extractDir%"
+if %ERRORLEVEL% neq 0 (
+    echo Failed to extract "%appxFile%".
+    pause
+    exit /b 1
+)
 
 REM Delete [Content_Types].xml and AppxBlockMap.xml
-del "%extractDir%\[Content_Types].xml"
-del "%extractDir%\AppxBlockMap.xml"
+del "%extractDir%
 
 REM Use Developer Command Prompt for VS 2019 to run MakeAppx pack
 call "C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\VsDevCmd.bat"
