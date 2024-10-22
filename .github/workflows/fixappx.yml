@@ -16,7 +16,8 @@ jobs:
         choco install 7zip -y
 
     - name: Run fix.bat
-      run: fix.bat
+      run: |
+        cmd /c fix.bat
 
     - name: Upload my_game.appx artifact
       uses: actions/upload-artifact@v3
