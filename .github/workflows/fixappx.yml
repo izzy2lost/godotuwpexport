@@ -1,31 +1,26 @@
-name: Download and Repack Appx
+name: Fix Appx
 
 on:
-  push:
-    branches:
-      - uwp
+  workflow_dispatch:
 
 jobs:
-  download_and_repack:
-    runs-on: windows-latest
+  fix_appx:
+    runs-on: windows-2019
 
     steps:
-      - name: Download export.appx from Google Drive
-        run: |
-          curl -L -o export.appx "https://drive.google.com/uc?export=download&id=1ODdhUmh4KixddOP1QWGOHeZHAgjDYkL0"
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Extract the appx
-        shell: cmd
-        run: |
-          "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x86\makeappx.exe" unpack /p "%CD%\export.appx" /d "%CD%\extractDir"
+    - name: Install 7zip
+      uses: chrisgahlert/install-chocolatey-package@v1
+      with:
+        package-name: 7zip
 
-      - name: Repack the appx
-        shell: cmd
-        run: |
-          "C:\Program Files (x86)\Windows Kits\10\bin\10.0.19041.0\x86\makeappx.exe" pack /d "%CD%\extractDir" /p "%CD%\export_repacked.appx"
+    - name: Run fix.bat
+      run: fix.bat
 
-      - name: Upload repacked appx file as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: export-appx
-          path: export_repacked.appx
+    - name: Upload my_game.appx artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my_game.appx
+        path: ./my_game.appx
