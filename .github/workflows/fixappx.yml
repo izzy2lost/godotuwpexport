@@ -5,30 +5,23 @@ on:
 
 jobs:
   fix_appx:
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
-    - name: Install 7zip
+    - name: Install 7-Zip
       run: |
         choco install 7zip -y
 
-    - name: Add Windows SDK to PATH
-      run: |
-        $windowsSdkPath = "C:\Program Files (x86)\Windows Kits\10\bin"
-        $version = (Get-ChildItem $windowsSdkPath | Sort-Object Name -Descending | Select-Object -First 1).Name
-        echo "Adding Windows SDK version $version to PATH"
-        $env:PATH += ";$windowsSdkPath\$version\x86"
-      shell: pwsh
-
     - name: Run fix.bat
       run: |
+        cd ${{ github.workspace }}  # Change to the workspace directory
         cmd /c fix.bat
 
-    - name: Upload my_game.appx artifact
-      uses: actions/upload-artifact@v3
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
       with:
         name: my_game.appx
-        path: ./my_game.appx
+        path: my_game.appx
