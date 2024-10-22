@@ -12,9 +12,8 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install 7zip
-      uses: chrisgahlert/install-chocolatey-package@v1
-      with:
-        package-name: 7zip
+      run: |
+        choco install 7zip -y
 
     - name: Run fix.bat
       run: fix.bat
