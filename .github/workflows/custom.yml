@@ -32,13 +32,14 @@ jobs:
           python -m pip install httplib2
           # Clone depot_tools repository to the current directory
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          # Add depot_tools to the PATH for the current session
-          echo "C:\\a\\_temp\\depot_tools" >> $GITHUB_PATH
+          # Add depot_tools to the system PATH using PowerShell
+          $env:PATH += ";$(pwd)\depot_tools"
+          echo "Depot tools added to path"
 
       # Verify depot_tools and gclient are available
       - name: Check gclient availability
         run: |
-          echo "Verifying gclient command"
+          # Check if gclient is available
           where gclient
 
       # Clone ANGLE repository and set up build tools
