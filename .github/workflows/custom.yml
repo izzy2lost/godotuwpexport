@@ -32,14 +32,15 @@ jobs:
       # Clone depot_tools and set up environment
       - name: Clone depot_tools and set up environment
         run: |
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          # Add depot_tools to PATH
-          echo "Adding depot_tools to PATH"
-          $env:PATH += ";$(pwd)\depot_tools"
-          # Ensure depot_tools and gclient are available
-          gclient --version
-          echo "depot_tools and gclient are available"
-
+         git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+         # Set the depot_tools path explicitly
+         $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
+         echo "Adding depot_tools to PATH"
+         $env:PATH += ";$(pwd)\depot_tools"
+         # Ensure depot_tools and gclient are available
+         gclient --version
+         echo "depot_tools and gclient are available"
+    
       # Clone the ANGLE repository and set up build tools
       - name: Clone ANGLE repository and set up build tools
         run: |
