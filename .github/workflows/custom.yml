@@ -35,6 +35,12 @@ jobs:
           # Add depot_tools to the PATH for the current session
           echo "C:\\a\\_temp\\depot_tools" >> $GITHUB_PATH
 
+      # Verify depot_tools and gclient are available
+      - name: Check gclient availability
+        run: |
+          echo "Verifying gclient command"
+          where gclient
+
       # Clone ANGLE repository and set up build tools
       - name: Clone ANGLE repository and set up build tools
         run: |
