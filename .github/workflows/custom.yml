@@ -23,37 +23,35 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Install dependencies for ANGLE (git, python libraries, etc.)
-      - name: Install dependencies
+      # Install required Python dependencies (needed for gclient)
+      - name: Install Python dependencies
         run: |
-          # Install Git (if not already available in the runner)
-          choco install git
-          # Install Python libraries required by depot_tools
+          python -m pip install --upgrade pip
           python -m pip install httplib2
-          # Clone depot_tools repository to the current directory
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          # Add depot_tools to the system PATH using PowerShell
-          $env:PATH += ";$(pwd)\depot_tools"
-          echo "Depot tools added to path"
 
-      # Verify depot_tools and gclient are available
-      - name: Check gclient availability
+      # Clone depot_tools and set up environment
+      - name: Clone depot_tools and set up environment
         run: |
-          # Check if gclient is available
-          where gclient
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          # Add depot_tools to PATH
+          echo "Adding depot_tools to PATH"
+          $env:PATH += ";$(pwd)\depot_tools"
+          # Ensure depot_tools and gclient are available
+          gclient --version
+          echo "depot_tools and gclient are available"
 
-      # Clone ANGLE repository and set up build tools
+      # Clone the ANGLE repository and set up build tools
       - name: Clone ANGLE repository and set up build tools
         run: |
           # Clone the ANGLE repository
           git clone https://chromium.googlesource.com/angle/angle.git
           cd angle
-          # Run bootstrap script to set up the environment
+          # Run bootstrap to set up the environment
           python scripts/bootstrap.py
-          # Sync dependencies using gclient (after depot_tools is added to the PATH)
+          # Sync dependencies using gclient
           gclient config --name angle --unmanaged https://chromium.googlesource.com/angle/angle.git
           gclient sync
-          
+
       # Build ANGLE with the correct configuration
       - name: Build ANGLE
         run: |
@@ -61,7 +59,7 @@ jobs:
           gn gen out/uwp --args='target_os="winuwp" target_cpu="x64" is_component_build=false is_debug=false'
           ninja -C out/uwp
 
-      # Build Godot with ANGLE support for GLES3
+      # Clone and build Godot with ANGLE GLES3 support
       - name: Build Godot with ANGLE GLES3 support
         run: |
           # Clone the Godot repository
