@@ -21,7 +21,14 @@ jobs:
     - name: Install dependencies
       run: |
         choco install ninja
-        choco install gn
+        choco install python3
+
+    - name: Download and Install GN
+      run: |
+        curl -LO https://gn.googlesource.com/gn.git
+        git clone https://gn.googlesource.com/gn.git C:\gn
+        cd C:\gn
+        python C:\gn\build.py
 
     - name: Clone depot_tools
       run: |
