@@ -26,14 +26,15 @@ jobs:
       # Install dependencies for ANGLE (depot_tools, git, etc.)
       - name: Install dependencies
         run: |
-          # Install Git
-          choco install git
-          # Install Python libraries required by depot_tools
-          python -m pip install httplib2
-          # Install depot_tools (assuming you haven't set it up in the repo yet)
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          echo "::add-path::C:/path/to/depot_tools"  # Adjust path as needed
-
+         # Install Git
+         choco install git
+         # Install Python libraries required by depot_tools
+         python -m pip install httplib2
+         # Install depot_tools (assuming you haven't set it up in the repo yet)
+         git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+         # Add depot_tools to the PATH using GITHUB_PATH
+         echo "C:/path/to/depot_tools" >> $GITHUB_PATH
+    
       # Clone ANGLE repository and set up build tools
       - name: Clone ANGLE repository and set up build tools
         run: |
